@@ -11,6 +11,9 @@ if not environ.get("POSTGRES_USER"):
 
 
 class Settings(BaseSettings):
+    APP_NAME: str = "FastAPI Application"
+    APP_VERSION: str = "0.0.0"
+
     DEBUG: bool = Field(default=False)
 
     # DB Connection

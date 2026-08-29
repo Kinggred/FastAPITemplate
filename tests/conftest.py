@@ -50,9 +50,17 @@ def engine_fixture():
 
 @pytest.fixture(name="session")
 def session_fixture(engine) -> Generator[Session]:
-    with Session(engine) as session:
+    connection = engine.connect()
+    transaction = connection.begin()
+
+    session = Session(bind=connection)
+
+    try:
         yield session
-        session.rollback()
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
 
 
 @pytest.fixture(name="client")

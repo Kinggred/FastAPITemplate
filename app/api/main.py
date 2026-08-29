@@ -5,9 +5,13 @@ from fastapi_pagination import add_pagination
 from app.api.endpoints.root import router as root_router
 from app.core.settings import get_settings
 
-app = FastAPI()
-add_pagination(app)
 settings = get_settings()
+
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+)
+add_pagination(app)
 
 
 v1_router = APIRouter(prefix="/api/v1")

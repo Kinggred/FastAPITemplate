@@ -22,8 +22,21 @@ migrate:
 	@read -p "Migration message: " msg; \
 	$(ALEMBIC) -c app/alembic.ini revision --autogenerate -m "$$msg"
 
-cleanup:
-	$(VENV)/bin/ruff format
+lint:
+	ruff check app tests
+
+format:
+	ruff format app tests
+	ruff check --fix app tests
+
+typecheck:
+	mypy app
 
 test:
-	@pytest -v
+	@pytest \
+		--cov=app \
+		--cov-report=term-missing \
+		--cov-report=xml \
+		-v
+
+check: lint typecheck test
