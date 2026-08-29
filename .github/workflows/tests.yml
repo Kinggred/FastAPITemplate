@@ -18,7 +18,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
 
         ports:
-          - 5432:5432
+          - 6544:5432
 
         options: >-
           --health-cmd="pg_isready -U postgres -d test_db"
@@ -26,15 +26,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    env:
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: test_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-
-      SECRET_KEY: test-secret
-      ALGORITHM: HS256
 
     steps:
       - name: Checkout repository

@@ -26,7 +26,4 @@ cleanup:
 	$(VENV)/bin/ruff format
 
 test:
-	@set -a; \
-	. ./.env.test; \
-	set +a; \
-	$(PYTEST) -v
+	@pytest -v
