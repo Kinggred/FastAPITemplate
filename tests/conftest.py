@@ -6,22 +6,33 @@ from uuid import UUID, uuid4
 import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, create_engine
 
 load_dotenv(".env.test", override=True)
-
 
 from app.core.settings import get_settings
 
 get_settings.cache_clear()
-
 settings = get_settings()
-
 
 from app.api.database import get_session
 from app.api.main import app
 
-# TODO : Import table models so SQLModel.metadata contains them.
+
+@pytest.fixture(scope="session", autouse=True)
+def migrate_test_database():
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "alembic",
+            "-c",
+            "app/alembic.ini",
+            "upgrade",
+            "head",
+        ],
+        check=True,
+    )
 
 
 @pytest.fixture(name="engine", scope="session")
@@ -32,12 +43,8 @@ def engine_fixture():
         pool_pre_ping=True,
     )
 
-    SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)
-
     yield engine
 
-    SQLModel.metadata.drop_all(engine)
     engine.dispose()
 
 
@@ -59,20 +66,6 @@ def client_fixture(session: Session) -> Generator[TestClient]:
         yield test_client
 
     app.dependency_overrides.clear()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def migrate_test_database():
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "alembic",
-            "upgrade",
-            "head",
-        ],
-        check=True,
-    )
 
 
 @pytest.fixture

@@ -7,7 +7,7 @@ from app.core.settings import get_settings
 from app.models.base import BaseModel
 
 # TODO: IMPORT MODELS TO ALLOW AUTOGENERATION OF MIGRATIONS
-# from app.models.user import User
+from app.models.user import User
 
 config = context.config
 if config.config_file_name is not None:

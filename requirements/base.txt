@@ -48,3 +48,7 @@ fastapi_pagination==0.15.16
 pwdlib==0.3.1
 alembic==1.19.1
 psycopg2-binary==2.9.12
+argon2-cffi==25.1.0
+argon2-cffi-bindings==26.1.0
+cffi==2.1.1
+pycparser==3.0

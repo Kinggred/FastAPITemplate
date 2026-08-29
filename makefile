@@ -3,6 +3,7 @@ PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 ALEMBIC := $(VENV)/bin/alembic
 UVICORN := $(VENV)/bin/fastapi
+PYTEST := $(VENV)/bin/pytest
 
 venv:
 	python3 -m venv $(VENV)
@@ -22,4 +23,10 @@ migrate:
 	$(ALEMBIC) -c app/alembic.ini revision --autogenerate -m "$$msg"
 
 cleanup:
-	$(VENV)/bin/black .
+	$(VENV)/bin/ruff format
+
+test:
+	@set -a; \
+	. ./.env.test; \
+	set +a; \
+	$(PYTEST) -v
