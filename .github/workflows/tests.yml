@@ -11,21 +11,17 @@ jobs:
     services:
       postgres:
         image: postgres:17-alpine
-
         env:
           POSTGRES_DB: test_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-
         ports:
-          - 6544:5432
-
+          - 6543:5432
         options: >-
           --health-cmd="pg_isready -U postgres -d test_db"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=5
-
 
     steps:
       - name: Checkout repository
@@ -41,10 +37,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements/test.txt
 
-      - name: Run migrations
-        run: |
-          alembic -c app/alembic.ini upgrade head
+      - name: Load test environment
+        run: cat .env.test >> "$GITHUB_ENV"
 
       - name: Run tests
-        run: |
-          pytest -v
+        run: make test
